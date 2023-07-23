@@ -4,14 +4,10 @@ pipeline {
    NAME = "backend"
    VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
    IMAGE = "${NAME}:${VERSION}"
+   dockerHome = tool 'myDocker'
+   env.PATH = "${dockerHome}/bin:${env.PATH}"
   }
   stages {
-    stage('Initialize'){
-      steps{
-        def dockerHome = tool 'myDocker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-      }
-    }
     stage('build') {
       steps {
         sh 'pip install -r requirements.txt'
