@@ -18,7 +18,7 @@ jobs:
           command: pytest --junitxml=junit.xml
       - store_test_results:
           path: junit.xml
-          
+
   build_docker_image:
     docker:
       - image: circleci/node:12
@@ -40,4 +40,4 @@ workflows:
       - test-python
       - build_docker_image:
           requires:
-            - build
+            - test-python
