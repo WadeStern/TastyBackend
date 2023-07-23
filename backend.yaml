@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      be: web
+  template:
+    metadata:
+      labels:
+        be: web
+    spec:
+      containers:
+      - name: backend
+        image: backend:latest
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    bb: web
+  ports:
+  - port: 7200
+    targetPort: 7200
+    nodePort: 30001
