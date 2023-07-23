@@ -17,8 +17,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh "pip install pytest"
-        sh "pytest test_main.py"
+        sh 'pytest -v --junitxml=test_report.xml'
       }
       post {
         always {
