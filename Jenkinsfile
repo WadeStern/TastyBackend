@@ -1,5 +1,5 @@
 pipeline {
-  agent { docker { image 'python:3.10' } }
+  agent { docker { image 'dudesm00thie/backendmaster:latest' } }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
