@@ -1,10 +1,13 @@
 pipeline {
   agent { docker { image 'python:3.10' } }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
   environment { 
    NAME = "backend"
    VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
    IMAGE = "${NAME}:${VERSION}"
-   dockerHome = tool 'myDocker'
+   DOCKERHUB_CREDENTIALS = credentials('dockerhub')
   }
   stages {
     stage('build') {
@@ -28,8 +31,13 @@ pipeline {
       script {
           withEnv(["PATH+${dockerHome}/bin"]) {
             echo "Running ${VERSION} on ${env.JENKINS_URL}"
-            sh "docker build -t ${NAME} ."
-            sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
+                sh 'docker build -t dudesm00thie/jenkins-docker-hub .'
+                sh 'docker build -t dudesmoothie/backend .'
+                sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push dudesmoothie/backend'
+                sh 'docker logout'
+
           }
         }   
       }
