@@ -2,6 +2,13 @@ FROM python:3.10
 ADD main.py .
 COPY requirements.txt ./
 
+# install docker cli
+RUN apt-get -y update; apt-get install -y sudo; apt-get install -y git wget
+RUN echo "Jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+RUN wget http://get.docker.com/builds/Linux/x86_64/docker-latest.tgz
+RUN tar -xvzf docker-latest.tgz
+RUN mv docker/* /usr/bin/
+#normal stuff below
 RUN pip3 install mariadb==1.0.7
 RUN pip install "fastapi[all]"
 RUN pip install -r requirements.txt

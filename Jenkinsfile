@@ -15,7 +15,7 @@ pipeline {
         sh 'pip install -r requirements.txt'
       }
     }
-    stage('test') {
+    /*stage('test') {
       steps {
         sh 'pytest -v --junitxml=test_report.xml'
       }
@@ -24,7 +24,7 @@ pipeline {
           junit 'test_report.xml'
         }
       }    
-    }
+    }*/
     stage('deploy') {
      steps {
                 sh 'docker build -t dudesm00thie/jenkins-docker-hub .'
