@@ -27,7 +27,6 @@ pipeline {
     }*/
     stage('deploy') {
      steps {
-                sh 'docker build -t dudesm00thie/jenkins-docker-hub .'
                 sh 'docker build -t dudesmoothie/backend .'
                 sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
