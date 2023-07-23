@@ -38,5 +38,5 @@ workflows:
     jobs:
       - test-python
       - build_docker_image
-        requires:
-          - test-python
+          requires:
+            - test-python
