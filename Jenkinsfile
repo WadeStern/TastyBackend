@@ -28,9 +28,6 @@ pipeline {
     }
     stage('deploy') {
      steps {
-      script {
-          withEnv(["PATH+${dockerHome}/bin"]) {
-            echo "Running ${VERSION} on ${env.JENKINS_URL}"
                 sh 'docker build -t dudesm00thie/jenkins-docker-hub .'
                 sh 'docker build -t dudesmoothie/backend .'
                 sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
@@ -42,5 +39,4 @@ pipeline {
         }   
       }
     }
-  }
-}
+
