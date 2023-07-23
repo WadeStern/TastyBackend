@@ -5,7 +5,6 @@ pipeline {
    VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
    IMAGE = "${NAME}:${VERSION}"
    dockerHome = tool 'myDocker'
-   env.PATH = "${dockerHome}/bin:${env.PATH}"
   }
   stages {
     stage('build') {
@@ -26,10 +25,14 @@ pipeline {
     }
     stage('deploy') {
      steps {
+      script {
+          withEnv(["PATH+${dockerHome}/bin"]) {
             echo "Running ${VERSION} on ${env.JENKINS_URL}"
             sh "docker build -t ${NAME} ."
             sh "docker tag ${NAME}:latest ${IMAGE_REPO}/${NAME}:${VERSION}"
-        }
+          }
+        }   
+      }
     }
   }
 }
