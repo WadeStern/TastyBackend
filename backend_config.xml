@@ -1,0 +1,9 @@
+<config>
+    <frontendurl>192.168.2.170:3000</frontendurl>
+    <backendurl>192.168.2.170:7200</backendurl>
+    <dbHost>tastydb.cztaefsxo74p.us-east-2.rds.amazonaws.com</dbHost>
+    <dbPort>3306</dbPort>
+    <dbName>tasty</dbName>
+    <dbUser>temp</dbUser>
+    <dbPassword>password</dbPassword>
+</config>

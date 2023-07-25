@@ -17,9 +17,20 @@ from sqlalchemy.orm import relationship
 from typing import List
 from sqlalchemy.sql import text
 import json
+import xml.etree.ElementTree as ET
+
+tree = ET.parse('backend_config.xml')
+root = tree.getroot()
+
+frontendurl = root.find('frontendurl').text
+dbHost = root.find('dbHost').text
+dbPort = root.find('dbPort').text
+dbName = root.find('dbName').text
+dbUser = root.find('dbUser').text
+dbPassword = root.find('dbPassword').text
 
 #engine = sqlalchemy.create_engine("mysql+pymysql://tempwade:password@23.229.227.36:3306/tastyonabudget")
-engine = sqlalchemy.create_engine("mariadb+mariadbconnector://temp:password@tastydb.cztaefsxo74p.us-east-2.rds.amazonaws.com:3306/tasty")
+engine = sqlalchemy.create_engine("mariadb+mariadbconnector://"+dbUser+":"+dbPassword+"@"+dbHost+":"+dbPort+"/"+dbName)
 #engine = sqlalchemy.create_engine("mariadb+mariadbconnector://temp:password@db5013654841.hosting-data.io")
 #engine = sqlalchemy.create_engine("mariadb+mariadbconnector://temp:password@192.168.2.170:3306/tasty")
 Base = declarative_base()
@@ -118,8 +129,8 @@ app = FastAPI()
 
 
 origins = [
-    "http://192.168.2.170:3000",
-    "192.168.2.170:3000"
+    "http://"+frontendurl,
+    frontendurl
 ]
 
 app.add_middleware(
