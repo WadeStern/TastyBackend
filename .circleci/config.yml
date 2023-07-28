@@ -18,6 +18,12 @@ jobs:
           command: pytest --junitxml=junit.xml
       - store_test_results:
           path: junit.xml
+      - run:
+          name: Lint Python code
+          command: |
+            pip install flake8
+            flake8 .
+          when: always  # Run even if previous steps fail
 
   build_docker_image:
     docker:
