@@ -1,6 +1,6 @@
 <config>
-    <frontendurl>buypotato-frontend:3000</frontendurl>
-    <backendurl>buypotato-backend:7200</backendurl>
+    <frontendurl>frontend.prod.mstern.com:3000</frontendurl>
+    <backendurl>backend.prod.mstern.com:7200</backendurl>
     <dbHost>tastydb.cztaefsxo74p.us-east-2.rds.amazonaws.com</dbHost>
     <dbPort>3306</dbPort>
     <dbName>tasty</dbName>
