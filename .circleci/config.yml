@@ -28,8 +28,7 @@ jobs:
           when: always  # Run even if previous steps fail
 
   build_docker_image:
-    docker:
-      - image: circleci/node:12
+    executor: azure/default
     steps:
       - checkout
       - setup_remote_docker:
