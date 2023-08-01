@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2
   kubernetes: circleci/kubernetes@1.3.1
-  azure: circleci/azure-cli@1.2.2
+  azure-cli: circleci/azure-cli@1.2.2
 jobs:
   test-python:
     # Install dependencies and run tests
@@ -28,7 +28,8 @@ jobs:
           when: always  # Run even if previous steps fail
 
   build_docker_image:
-    executor: azure/default
+    docker:
+      - image: circleci/node:12
     steps:
       - checkout
       - setup_remote_docker:
@@ -43,8 +44,7 @@ jobs:
             docker push $DOCKER_LOGIN/$IMAGE_NAME
 
   create_kubernetes_cluster:
-    docker:
-      - image: circleci/azure-cli@1.2.2
+    executor: azure-cli/default
     steps:
       - checkout
       - run:
