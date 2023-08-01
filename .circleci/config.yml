@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   python: circleci/python@2
+  kubernetes: circleci/kubernetes@0.13.1
 jobs:
   test-python:
     # Install dependencies and run tests
@@ -40,6 +41,26 @@ jobs:
             docker build -t $DOCKER_LOGIN/$IMAGE_NAME -t $DOCKER_LOGIN/$IMAGE_NAME:$TAG .
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $DOCKER_LOGIN/$IMAGE_NAME
+
+  create_kubernetes_cluster:
+    executor: docker-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Azure CLI
+          command: |
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - run:
+          name: Login to Azure
+          command: |
+            az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"  
+      - run:
+          name: Create Kubernetes Cluster
+          command: |
+            az aks create --resource-group buypotatoResourceGroup --name buypotatoStaging --node-count 3 --generate-ssh-keys --subscription "${AZURE_SUBSCRIPTION_ID}"
+      - persist_to_workspace:
+          root: .
+          paths: .kube
 workflows:
   build-and-test:
     jobs:
@@ -47,3 +68,6 @@ workflows:
       - build_docker_image:
           requires:
             - test-python
+      - create_kubernetes_cluster
+          requires:
+            -build_docker_image
