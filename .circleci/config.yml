@@ -43,6 +43,14 @@ jobs:
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $DOCKER_LOGIN/$IMAGE_NAME
 
+  verify-install:
+    executor: azure-cli/default
+    steps:
+      - azure-cli/install
+      - run:
+          command: az -v
+          name: Verify Azure CLI is installed
+  
   create_kubernetes_cluster:
     executor: azure-cli/default
     steps:
@@ -65,4 +73,5 @@ jobs:
 workflows:
   build-and-test:
     jobs:
+      - verify-install
       - create_kubernetes_cluster
