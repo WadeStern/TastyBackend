@@ -29,6 +29,6 @@ spec:
       containers:
       - name: buypotato-backend
         image: dudesm00thie/tastybackend
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 7200
