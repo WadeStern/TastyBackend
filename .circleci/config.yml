@@ -68,4 +68,4 @@ workflows:
             - test-python
       - create_kubernetes_cluster:
           requires:
-            -build_docker_image
+            - build_docker_image
