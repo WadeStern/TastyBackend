@@ -48,6 +48,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Azure CLI
+          command: |
+            curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+      - run:
           name: Login to Azure
           command: |
             az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"  
@@ -61,10 +65,4 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-python
-      - build_docker_image:
-          requires:
-            - test-python
-      - create_kubernetes_cluster:
-          requires:
-            - build_docker_image
+      - create_kubernetes_cluster
