@@ -95,4 +95,4 @@ workflows:
             - create_kubernetes_cluster
           filters:
             branches:
-              only: main
+              only: "main"
