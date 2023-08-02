@@ -58,7 +58,41 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .kube
+
+  apply_kubernetes_manifest:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Install kubectl
+          command: |
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/
+      - run:
+          name: Apply Kubernetes Manifest
+          command: |
+            curl -LO "https://raw.githubusercontent.com/WadeStern/TastyBackend/d6bc17d77bf489d7b45bf83d0f1e0f609713bc44/deploy/staging-backend-deploy.yaml"
+            kubectl apply -f staging-backend-deploy.yaml
+      - run:
+          name: Verify Deployment
+          command: |
+            kubectl get pods
+            kubectl get services
 workflows:
   build-and-test:
     jobs:
       - test-python
+      - build_docker_image:
+          requires: test-python
+      - create_kubernetes_cluster:
+          requires: build_docker_image
+      - apply_kubernetes_manifest:
+          requires:
+            - create_kubernetes_cluster
+          filters:
+            branches:
+              only: main
