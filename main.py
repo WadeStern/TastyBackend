@@ -14,11 +14,12 @@ from sqlalchemy.orm import mapped_column
 from typing import List
 from sqlalchemy.sql import text
 import xml.etree.ElementTree as ET
+import os
 
 tree = ET.parse('backend_config.xml')
 root = tree.getroot()
 
-frontendurl = root.find('frontendurl').text
+frontendurl = frontendurl = os.environ.get('FRONTEND_HOST', '192.168.2.170:3000')
 dbHost = root.find('dbHost').text
 dbPort = root.find('dbPort').text
 dbName = root.find('dbName').text

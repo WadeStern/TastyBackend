@@ -32,3 +32,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 7200
+        env:
+        - name: FRONTEND_HOST
+          value: frontend.staging.mstern.com
