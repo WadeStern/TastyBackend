@@ -87,8 +87,11 @@ workflows:
     jobs:
       - test-python
       - build_docker_image:
-          requires: test-python
+          requires:
+            - test-python
       - create_kubernetes_cluster:
-          requires: build_docker_image
+          requires:
+            - build_docker_image
       - apply_kubernetes_manifest:
-          requires: create_kubernetes_cluster
+          requires:
+            - create_kubernetes_cluster
