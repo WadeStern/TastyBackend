@@ -19,7 +19,7 @@ import os
 tree = ET.parse('backend_config.xml')
 root = tree.getroot()
 
-frontendurl = frontendurl = os.environ.get('FRONTEND_HOST', '192.168.2.170:3000')
+frontendurl = os.environ.get('FRONTEND_HOST', '192.168.2.170:3000')
 dbHost = root.find('dbHost').text
 dbPort = root.find('dbPort').text
 dbName = root.find('dbName').text
