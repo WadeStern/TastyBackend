@@ -52,15 +52,9 @@ jobs:
           command: |
             az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"  
       - run:
-          name: Generate SSH Key Pair
-          command: |
-            ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
-            echo "SSH Public Key:"
-            cat ~/.ssh/id_rsa.pub
-      - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --generate-ssh-keys
       - persist_to_workspace:
           root: .
           paths: .kube
