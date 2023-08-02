@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --generate-ssh-keys
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1
       - persist_to_workspace:
           root: .
           paths: .kube
