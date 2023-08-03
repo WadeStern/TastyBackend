@@ -45,6 +45,7 @@ jobs:
   create_kubernetes_cluster:
     docker:
       - image: dudesm00thie/wadeazcli
+        user: root
     steps:
       - checkout
       - run:
@@ -58,7 +59,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging1 --node-count 1
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging1 --node-count 1 --generate-ssh-keys
       - persist_to_workspace:
           root: .
           paths: .kube
