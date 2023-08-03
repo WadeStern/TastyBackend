@@ -66,7 +66,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ~/.kube/config
+            - ./.kube/config
 
 workflows:
   build-and-test:
