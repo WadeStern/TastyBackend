@@ -65,7 +65,8 @@ jobs:
             az aks create -g buypotatoResourceGroup -n buypotatoStaging1 --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
       - persist_to_workspace:
           root: .
-          paths: .kube
+          paths:
+            - .kube/config
 
 workflows:
   build-and-test:
