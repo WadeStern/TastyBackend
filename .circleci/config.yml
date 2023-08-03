@@ -62,8 +62,8 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
-            pwd
       - persist_to_workspace:
           root: /root
           paths:
@@ -72,4 +72,10 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - create_kubernetes_cluster
+      - test-python
+      - build_docker_image:
+          requires:
+            - test-python
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
