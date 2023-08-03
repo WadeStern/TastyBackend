@@ -53,13 +53,15 @@ jobs:
           command: |
             az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"  
       - run:
-          name: who am i
+          name: Configure SSH Key
           command: |
-            whoami
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            az configure --defaults acr=buypotatoResourceGroup
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging1 --node-count 1 --generate-ssh-keys
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging1 --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
       - persist_to_workspace:
           root: .
           paths: .kube
