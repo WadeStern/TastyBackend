@@ -65,8 +65,9 @@ jobs:
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
             pwd
       - persist_to_workspace:
+          root: /root
           paths:
-            - /root/.kube/config
+            - /.kube/config
 
 workflows:
   build-and-test:
