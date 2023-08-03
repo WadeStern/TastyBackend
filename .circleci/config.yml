@@ -51,6 +51,10 @@ jobs:
           name: Login to Azure
           command: |
             az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"  
+      -run:
+          name: who am i
+          command: |
+            whoami
       - run:
           name: Create Kubernetes Cluster
           command: |
