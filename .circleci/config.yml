@@ -57,7 +57,8 @@ jobs:
           command: |
             echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
-            az configure --defaults acr=buypotatoResourceGroup
+            echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
+            chmod 600 ~/.ssh/id_rsa.pub
       - run:
           name: Create Kubernetes Cluster
           command: |
