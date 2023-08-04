@@ -79,10 +79,12 @@ jobs:
           command: |
             cat /root/.kube/config
       - run:
+          name: Set Kubernetes Context
+          command: kubectl config use-context buypotatoStaging
+      - run:
           name: check stuff
           command: |
             kubectl config current-context
-            cat /root/.kube/config
       - run:
           name: Deploy to Kubernetes
           command: kubectl apply -f deploy/staging-backend-deploy.yaml
