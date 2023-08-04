@@ -78,6 +78,7 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
+            export KUBECONFIG=/root/.kube/config
       - run:
           name: get contexts
           command: |
