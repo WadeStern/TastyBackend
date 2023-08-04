@@ -75,6 +75,11 @@ jobs:
       - attach_workspace:
           at: /root
       - run:
+          name: check stuff
+          command: |
+            kubectl config current-context
+            cat /root/.kube/config
+      - run:
           name: Deploy to Kubernetes
           command: kubectl apply -f deploy/staging-backend-deploy.yaml
 workflows:
