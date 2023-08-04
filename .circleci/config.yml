@@ -75,6 +75,10 @@ jobs:
       - attach_workspace:
           at: /root
       - run:
+          name: check kube config
+          command: |
+            cat /root/.kube/config
+      - run:
           name: check stuff
           command: |
             kubectl config current-context
