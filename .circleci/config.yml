@@ -68,14 +68,22 @@ jobs:
           root: /root
           paths:
             - .kube/config
-
+  deploy_to_kubernetes:
+    docker:
+      - image: bitnami/kubectl
+        user: root
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Deploy to Kubernetes
+          command: kubectl apply -f deploy/staging-backend-deploy.yaml
 workflows:
   build-and-test:
     jobs:
-      - test-python
-      - build_docker_image:
-          requires:
-            - test-python
       - create_kubernetes_cluster:
           requires:
             - build_docker_image
+      - deploy_to_kubernetes:
+          requires:
+            - create_kubernetes_cluster
