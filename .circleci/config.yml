@@ -80,9 +80,7 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - create_kubernetes_cluster:
-          requires:
-            - build_docker_image
+      - create_kubernetes_cluster
       - deploy_to_kubernetes:
           requires:
             - create_kubernetes_cluster
