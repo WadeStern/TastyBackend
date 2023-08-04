@@ -86,12 +86,8 @@ jobs:
           name: Set Kubernetes Context
           command: kubectl --kubeconfig=/root/.kube/config config use-context buypotatoStaging
       - run:
-          name: check stuff
-          command: |
-            kubectl config current-context
-      - run:
           name: Deploy to Kubernetes
-          command: kubectl apply -f deploy/staging-backend-deploy.yaml
+          command: kubectl --kubeconfig=/root/.kube/config apply -f deploy/staging-backend-deploy.yaml
 workflows:
   build-and-test:
     jobs:
