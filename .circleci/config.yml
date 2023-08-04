@@ -78,6 +78,9 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
+      - run:
+          name: get contexts
+          command: |
             kubectl config get-contexts
       - run:
           name: Set Kubernetes Context
