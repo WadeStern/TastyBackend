@@ -78,6 +78,7 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
+            kubectl config get-contexts
       - run:
           name: Set Kubernetes Context
           command: kubectl config use-context buypotatoStaging
