@@ -72,19 +72,14 @@ jobs:
       - image: bitnami/kubectl
         user: root
     steps:
+      - checkout
       - attach_workspace:
           at: /root
       - run:
-          name: check kube config
-          command: |
-            cat /root/.kube/config
-            find /project
-      - run:
-            name: Find staging-backend-deploy.yaml
-            command: find /root -name "staging-backend-deploy.yaml" -type f
-      - run:
           name: List files in /root directory
-          command: find /root
+          command: | 
+            find /root
+            find /project
       - run:
           name: get contexts
           command: |
@@ -95,7 +90,7 @@ jobs:
           command: kubectl --kubeconfig=/root/.kube/config config use-context buypotatoStaging
       - run:
           name: Deploy to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/deploy/staging-backend-deploy.yaml
+          command: kubectl --kubeconfig=/root/.kube/config apply -k 'https://github.com/WadeStern/TastyBackend/blob/a66e60fad89f7fa256741941308e6c94ca4f3fbd/deploy/staging-backend-deploy.yaml'
 workflows:
   build-and-test:
     jobs:
