@@ -78,7 +78,10 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
-            find /project
+            find /root/project
+      - run:
+            name: Find staging-backend-deploy.yaml
+            command: find /root -name "staging-backend-deploy.yaml" -type f
       - run:
           name: List files in /root directory
           command: find /root
