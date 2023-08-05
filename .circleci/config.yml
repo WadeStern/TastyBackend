@@ -78,6 +78,8 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
+            ls
+            pwd
       - run:
           name: get contexts
           command: |
@@ -87,7 +89,7 @@ jobs:
           command: kubectl --kubeconfig=/root/.kube/config config use-context buypotatoStaging
       - run:
           name: Deploy to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f deploy/staging-backend-deploy.yaml
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/deploy/staging-backend-deploy.yaml
 workflows:
   build-and-test:
     jobs:
