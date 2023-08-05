@@ -78,10 +78,10 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
-            ls /project
+            find /project
       - run:
           name: List files in /root directory
-          command: ls /root
+          command: find /root
       - run:
           name: get contexts
           command: |
