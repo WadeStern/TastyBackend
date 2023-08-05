@@ -78,12 +78,15 @@ jobs:
           name: check kube config
           command: |
             cat /root/.kube/config
-            ls
-            pwd
+            ls /project
+      - run:
+          name: List files in /root directory
+          command: ls /root
       - run:
           name: get contexts
           command: |
             kubectl --kubeconfig=/root/.kube/config config get-contexts
+            pwd
       - run:
           name: Set Kubernetes Context
           command: kubectl --kubeconfig=/root/.kube/config config use-context buypotatoStaging
