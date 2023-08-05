@@ -76,21 +76,13 @@ jobs:
       - attach_workspace:
           at: /root
       - run:
-          name: List files in /root directory
+          name: List files
           command: | 
             find /root
             find /project
       - run:
-          name: get contexts
-          command: |
-            kubectl --kubeconfig=/root/.kube/config config get-contexts
-            pwd
-      - run:
-          name: Set Kubernetes Context
-          command: kubectl --kubeconfig=/root/.kube/config config use-context buypotatoStaging
-      - run:
           name: Deploy to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -k 'https://github.com/WadeStern/TastyBackend/blob/a66e60fad89f7fa256741941308e6c94ca4f3fbd/deploy/staging-backend-deploy.yaml'
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /project/deploy/staging-backend-deploy.yaml
 workflows:
   build-and-test:
     jobs:
