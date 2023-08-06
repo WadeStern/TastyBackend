@@ -95,8 +95,7 @@ jobs:
       - run:
           name: set backend ip
           command: |
-            svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
-            echo "Service IP: $svc_ip"
+            timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svc_ip" ]; do sleep 5; done; echo $svc_ip'
             curl -X 'POST' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
@@ -115,8 +114,7 @@ jobs:
       - run:
           name: set frontend ip
           command: |
-            svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-frontend -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
-            echo "Service IP: $svc_ip"
+            timeout 300 bash -c 'until svcf_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-frontend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svcf_ip" ]; do sleep 5; done; echo $svcf_ip'
             curl -X 'POST' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
@@ -126,7 +124,7 @@ jobs:
             {
             "name": "frontend.staging.mstern.com",
             "type": "A",
-            "content": "'"$svc_ip"'",
+            "content": "'"$svcf_ip"'",
             "ttl": 3600,
             "prio": 0,
             "disabled": false
