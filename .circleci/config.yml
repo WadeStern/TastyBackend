@@ -68,7 +68,7 @@ jobs:
             - .kube/config
   deploy_to_kubernetes:
     docker:
-      - image: bitnami/kubectl
+      - image: dudesm00thie/kubeaz:latest
         user: root
     steps:
       - checkout
