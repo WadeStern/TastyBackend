@@ -93,6 +93,8 @@ jobs:
       - run:
           name: set backend ip
           command: |
+            svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
+            echo "Service IP: $svc_ip"
             curl -X 'POST' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
