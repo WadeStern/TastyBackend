@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
+            #az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
@@ -79,12 +79,12 @@ jobs:
           name: List files
           command: | 
             find /root
-      - run:
-          name: Deploy backend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
-      - run:
-          name: Deploy frontend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
+      #- run:
+      #    name: Deploy backend to Kubernetes
+      #    command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
+      #- run:
+      #    name: Deploy frontend to Kubernetes
+      #    command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
       - run:
           name: Find backend ip
           command: |
@@ -102,7 +102,7 @@ jobs:
             {
             "name": "backend.staging.mstern.com",
             "type": "A",
-            "content": "${svc_ip}", 
+            "content": "'${svc_ip}'", 
             "ttl": 3600,
             "prio": 0,
             "disabled": false
