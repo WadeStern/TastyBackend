@@ -100,7 +100,7 @@ jobs:
             {
             "name": "backend.staging.mstern.com",
             "type": "A",
-            "content": $svc_ip, 
+            "content": "${svc_ip}", 
             "ttl": 3600,
             "prio": 0,
             "disabled": false
