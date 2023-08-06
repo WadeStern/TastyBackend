@@ -88,8 +88,10 @@ jobs:
       - run:
           name: Find backend ip
           command: |
-            svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
-            echo "Service IP: $svc_ip"
+            timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$ip" ]; do sleep 5; done; echo $svc_ip'
+          environment:
+            SERVICE_NAME: backend-service
+          no_output_timeout: 600
       - run:
           name: set backend ip
           command: |
