@@ -93,7 +93,7 @@ jobs:
       - run:
           name: set backend ip
           command: |
-            curl -X 'POST' \
+            curl -X 'PUT' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
             -H 'X-API-Key: 033706c3e77e4883babbcb54ad45caae.eg8av-iEvslr4GYZ-umb7eDwt2RntGb8KLHvQ8PuiSqAPUpnwLhM5WMPZJetTsnXnBl5z6W1P9UzZIQLf6_O-w' \
@@ -102,7 +102,7 @@ jobs:
             {
             "name": "backend.staging.mstern.com",
             "type": "A",
-            "content": "'${svc_ip}'", 
+            "content": "'"${svc_ip}"'",
             "ttl": 3600,
             "prio": 0,
             "disabled": false
