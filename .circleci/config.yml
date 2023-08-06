@@ -61,7 +61,6 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
@@ -87,10 +86,13 @@ jobs:
           name: Deploy frontend to Kubernetes
           command: kubectl --kubeconfig=/root/.kube/config apply -f /project/deploy/staging-frontend-deploy.yaml
       - run:
-          name: Find and apply dns IP Backend
+          name: Find backend ip
           command: |
             svc_ip=$(kubectl get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
             echo "Service IP: $svc_ip"
+      - run:
+          name: set backend ip
+          command: |
             curl -X 'POST' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
