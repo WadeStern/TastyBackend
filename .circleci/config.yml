@@ -78,13 +78,12 @@ jobs:
           name: List files
           command: | 
             find /root
-            find /project
       - run:
           name: Deploy backend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /project/deploy/staging-backend-deploy.yaml
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
       - run:
           name: Deploy frontend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /project/deploy/staging-frontend-deploy.yaml
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
       - run:
           name: Find backend ip
           command: |
