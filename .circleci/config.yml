@@ -115,7 +115,7 @@ jobs:
       - run:
           name: set frontend ip
           command: |
-            svc_ip=$(timeout 300 bash -c 'until svcf_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-frontend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svcf_ip" ]; do sleep 5; done; echo $svcf_ip')
+            svcf_ip=$(timeout 300 bash -c 'until svcf_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-frontend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svcf_ip" ]; do sleep 5; done; echo $svcf_ip')
             curl -X 'POST' \
             'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
             -H 'accept: application/json' \
