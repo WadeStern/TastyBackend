@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
+            #az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
@@ -88,7 +88,7 @@ jobs:
       - run:
           name: Find backend ip
           command: |
-            timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$ip" ]; do sleep 5; done; echo $svc_ip'
+            timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svc_ip" ]; do sleep 5; done; echo $svc_ip'
           environment:
             SERVICE_NAME: backend-service
           no_output_timeout: 600
