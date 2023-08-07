@@ -141,12 +141,10 @@ jobs:
           name: Install Dependencies
           command: |
             find /root
-            pip install -r /root/stagingtest/requirements.txt
-            
-
+            pip install -r /root/project/stagingtest/requirements.txt
       - run:
           name: Run Staging Tests
-          command: python /root/stagingtest/test_staging.py
+          command: python /root/project/stagingtest/test_staging.py
 
 workflows:
   build-and-test:
