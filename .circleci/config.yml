@@ -131,6 +131,18 @@ jobs:
             "disabled": false
             }
             ]'
+  Run_staging_test:
+    docker:
+      - image: python:3.10
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: pip install -r /root/stagingtest/requirements.txt
+
+      - run:
+          name: Run Staging Tests
+          command: python /root/stagingtest/test_staging.py
 
 workflows:
   build-and-test:
@@ -139,3 +151,6 @@ workflows:
       - deploy_to_kubernetes:
           requires:
             - create_kubernetes_cluster
+      - Run_staging_test:
+          requires:
+            - deploy_to_kubernetes
