@@ -134,11 +134,15 @@ jobs:
   Run_staging_test:
     docker:
       - image: python:3.10
+        user: root
     steps:
       - checkout
       - run:
           name: Install Dependencies
-          command: pip install -r /root/stagingtest/requirements.txt
+          command: |
+            find /root
+            pip install -r /root/stagingtest/requirements.txt
+            
 
       - run:
           name: Run Staging Tests
