@@ -92,45 +92,7 @@ jobs:
           environment:
             SERVICE_NAME: backend-service
           no_output_timeout: 600
-      - run:
-          name: set backend ip
-          command: |
-            svc_ip=$(timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svc_ip" ]; do sleep 5; done; echo "$svc_ip"')
-            echo "Service IP after trimming: $svc_ip"
-            curl -X 'PATCH' \
-            'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
-            -H 'accept: application/json' \
-            -H 'X-API-Key: 033706c3e77e4883babbcb54ad45caae.eg8av-iEvslr4GYZ-umb7eDwt2RntGb8KLHvQ8PuiSqAPUpnwLhM5WMPZJetTsnXnBl5z6W1P9UzZIQLf6_O-w' \
-            -H 'Content-Type: application/json' \
-            -d '[
-            {
-            "name": "backend.staging.mstern.com",
-            "type": "A",
-            "content": "'"$svc_ip"'",
-            "ttl": 3600,
-            "prio": 0,
-            "disabled": false
-            }
-            ]'
-      - run:
-          name: set frontend ip
-          command: |
-            svcf_ip=$(timeout 300 bash -c 'until svcf_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-frontend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svcf_ip" ]; do sleep 5; done; echo $svcf_ip')
-            curl -X 'PATCH' \
-            'https://api.hosting.ionos.com/dns/v1/zones/852023db-1e22-11ec-9edb-0a5864444944/records' \
-            -H 'accept: application/json' \
-            -H 'X-API-Key: 033706c3e77e4883babbcb54ad45caae.eg8av-iEvslr4GYZ-umb7eDwt2RntGb8KLHvQ8PuiSqAPUpnwLhM5WMPZJetTsnXnBl5z6W1P9UzZIQLf6_O-w' \
-            -H 'Content-Type: application/json' \
-            -d '[
-            {
-            "name": "frontend.staging.mstern.com",
-            "type": "A",
-            "content": "'"$svcf_ip"'",
-            "ttl": 3600,
-            "prio": 0,
-            "disabled": false
-            }
-            ]'
+    
   Run_staging_test:
     docker:
       - image: python:3.10
@@ -149,10 +111,12 @@ jobs:
 workflows:
   build-and-test:
     jobs:
+      #- test-python
+      #- build_docker_image
       - create_kubernetes_cluster
-      - deploy_to_kubernetes:
-          requires:
-            - create_kubernetes_cluster
-      - Run_staging_test:
-          requires:
-            - deploy_to_kubernetes
+      #- deploy_to_kubernetes:
+      #    requires:
+      #      - create_kubernetes_cluster
+      #- Run_staging_test:
+      #    requires:
+      #      - deploy_to_kubernetes

@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: buypotato-backend
+  annotations: 
+    external-dns.alpha.kubernetes.io/hostname: backend.prod.wadestern.com
 spec:
   selector:
     app: buypotato-backend
