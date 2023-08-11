@@ -148,7 +148,7 @@ workflows:
       #- test-python
       #- build_docker_image
       - create_kubernetes_cluster
-      - setup_dns:
+      - setup_dns_and_deploy:
           requires:
             - create_kubernetes_cluster
       #- Run_staging_test:
