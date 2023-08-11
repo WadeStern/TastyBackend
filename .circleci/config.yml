@@ -92,14 +92,14 @@ jobs:
       - run:
           name: Make azure.json
           command: |
-            'cat <<-EOF > ./azure.json
+            cat <<-'EOF' > ./azure.json
             {
               "tenantId": "$(az account show --query tenantId -o tsv)",
               "subscriptionId": "$(az account show --query id -o tsv)",
-              "resourceGroup":' "$AZURE_DNS_ZONE_RESOURCE_GROUP"',
+              "resourceGroup": "$AZURE_DNS_ZONE_RESOURCE_GROUP",
               "useManagedIdentityExtension": true
             }
-            EOF'
+            EOF
             more ./azure.json
       - run:
           name: Create kubernetes secret and namespace
