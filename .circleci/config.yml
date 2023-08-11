@@ -67,6 +67,52 @@ jobs:
           root: /root
           paths:
             - .kube/config
+
+  setup_dns:
+    docker:
+      - image: dudesm00thie/kubeaz:latest
+        user: root
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Set Vars
+          command: | 
+            PRINCIPAL_ID=$(az aks show --resource-group buypotatoResourceGroup --name buypotatoStaging \
+            --query "identityProfile.kubeletidentity.objectId" --output tsv)
+            AZURE_DNS_ZONE="staging.wadestern.com" 
+            AZURE_DNS_ZONE_RESOURCE_GROUP="buypotatoResourceGroup"
+            DNS_ID=$(az network dns zone show --name $AZURE_DNS_ZONE \
+            --resource-group $AZURE_DNS_ZONE_RESOURCE_GROUP --query "id" --output tsv)
+            echo $PRINCIPAL_ID
+            echo $AZURE_DNS_ZONE
+            echo $AZURE_DNS_ZONE_RESOURCE_GROUP
+            echo $DNS_ID
+      - run:
+          name: Make azure.json
+          command: |
+            cat <<-EOF > ./azure.json
+            {
+              "tenantId": "$(az account show --query tenantId -o tsv)",
+              "subscriptionId": "$(az account show --query id -o tsv)",
+              "resourceGroup": "$AZURE_DNS_ZONE_RESOURCE_GROUP",
+              "useManagedIdentityExtension": true
+            }
+            EOF
+            more ./azure.json
+      - run:
+          name: Create kubernetes secret and namespace
+          command: |
+            kubectl --kubeconfig=/root/.kube/config create secret generic azure-config-file --namespace "default" --from-file ./azure.json
+            kubectl --kubeconfig=/root/.kube/config create --namespace "default" --filename /root/project/deploy/azure-external-dns.yaml
+      - run:
+          name: Deploy backend to Kubernetes
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
+      - run:
+          name: Deploy frontend to Kubernetes
+          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
+
   deploy_to_kubernetes:
     docker:
       - image: dudesm00thie/kubeaz:latest
@@ -85,13 +131,6 @@ jobs:
       - run:
           name: Deploy frontend to Kubernetes
           command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
-      - run:
-          name: Find backend ip
-          command: |
-            timeout 300 bash -c 'until svc_ip=$(kubectl --kubeconfig=/root/.kube/config get svc buypotato-backend -o jsonpath="{.status.loadBalancer.ingress[*].ip}"); [ ! -z "$svc_ip" ]; do sleep 5; done; echo $svc_ip'
-          environment:
-            SERVICE_NAME: backend-service
-          no_output_timeout: 600
     
   Run_staging_test:
     docker:
@@ -114,9 +153,12 @@ workflows:
       #- test-python
       #- build_docker_image
       - create_kubernetes_cluster
-      #- deploy_to_kubernetes:
-      #    requires:
-      #      - create_kubernetes_cluster
+      - setup_dns:
+          requires:
+            - create_kubernetes_cluster
+      - deploy_to_kubernetes:
+          requires:
+            - setup_dns
       #- Run_staging_test:
       #    requires:
       #      - deploy_to_kubernetes
