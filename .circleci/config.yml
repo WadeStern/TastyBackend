@@ -61,14 +61,14 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            #az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 1 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
           paths:
             - .kube/config
 
-  setup_dns:
+  setup_dns_and_deploy:
     docker:
       - image: dudesm00thie/kubeaz:latest
         user: root
@@ -99,24 +99,27 @@ jobs:
             kubectl --kubeconfig=/root/.kube/config create secret generic azure-config-file --namespace "default" --from-file /root/project/deploy/azure.json
             kubectl --kubeconfig=/root/.kube/config create --namespace "default" --filename /root/project/deploy/azure-external-dns.yaml
       - run:
-          name: Deploy backend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
-      - run:
-          name: Deploy frontend to Kubernetes
-          command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
+          name: Wait for DNS to be ready
+          command: |
+            max_attempts=12
+            attempts=0
 
-  deploy_to_kubernetes:
-    docker:
-      - image: dudesm00thie/kubeaz:latest
-        user: root
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /root
-      - run:
-          name: List files
-          command: | 
-            find /root
+            while [ "$attempts" -lt "$max_attempts" ]; do
+              ready_pods=$(kubectl get pods --selector=app=dns-app-label -o jsonpath='{.items[*].status.containerStatuses[0].ready}')
+              if [[ "$ready_pods" == *"false"* ]]; then
+                echo "DNS pods are not ready yet. Waiting..."
+                sleep 10
+                ((attempts++))
+              else
+                echo "All DNS pods are ready!"
+                exit 0  # Exit with success status
+              fi
+            done
+
+            if [ "$attempts" -ge "$max_attempts" ]; then
+              echo "DNS pods did not become ready within the timeout. Exiting..."
+              exit 1  # Exit with failure status
+            fi
       - run:
           name: Deploy backend to Kubernetes
           command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-backend-deploy.yaml
@@ -148,9 +151,6 @@ workflows:
       - setup_dns:
           requires:
             - create_kubernetes_cluster
-      - deploy_to_kubernetes:
-          requires:
-            - setup_dns
       #- Run_staging_test:
       #    requires:
       #      - deploy_to_kubernetes
