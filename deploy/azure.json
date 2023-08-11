@@ -1,0 +1,6 @@
+{
+  "tenantId": "c571a3f4-e560-450b-87a4-0d7f32812918",
+  "subscriptionId": "a24f845d-8972-45b6-ab3d-9dd9e598dbeb",
+  "resourceGroup": "buypotatoResourceGroup",
+  "useManagedIdentityExtension": true
+}

@@ -90,21 +90,9 @@ jobs:
             echo $AZURE_DNS_ZONE_RESOURCE_GROUP
             echo $DNS_ID
       - run:
-          name: Make azure.json
-          command: |
-            cat <<-'EOF' > ./azure.json
-            {
-              "tenantId": "$(az account show --query tenantId -o tsv)",
-              "subscriptionId": "$(az account show --query id -o tsv)",
-              "resourceGroup": "$AZURE_DNS_ZONE_RESOURCE_GROUP",
-              "useManagedIdentityExtension": true
-            }
-            EOF
-            more ./azure.json
-      - run:
           name: Create kubernetes secret and namespace
           command: |
-            kubectl --kubeconfig=/root/.kube/config create secret generic azure-config-file --namespace "default" --from-file ./azure.json
+            kubectl --kubeconfig=/root/.kube/config create secret generic azure-config-file --namespace "default" --from-file /root/project/deploy/azure.json
             kubectl --kubeconfig=/root/.kube/config create --namespace "default" --filename /root/project/deploy/azure-external-dns.yaml
       - run:
           name: Deploy backend to Kubernetes
