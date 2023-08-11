@@ -36,6 +36,6 @@ spec:
         - containerPort: 3000
         env:
         - name: BACKEND_PORT
-          value: "7200"  # Set the desired backend port
+          value: "7200"
         - name: BACKEND_URL
           value: "backend.staging.wadestern.com"
