@@ -94,7 +94,7 @@ jobs:
             echo $DNS_ID
       - run:
           name: Role assignment
-          command: az role assignment create --role "DNS Zone Contributor" --assignee $PRINCIPAL_ID --scope $DNS_ID
+          command: az role assignment create --role "DNS Zone Contributor" --assignee "${PRINCIPAL_ID}" --scope "${DNS_ID}"
       - run:
           name: Create kubernetes secret and namespace
           command: |
