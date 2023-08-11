@@ -87,12 +87,14 @@ jobs:
             --query "identityProfile.kubeletidentity.objectId" --output tsv)
             AZURE_DNS_ZONE="staging.wadestern.com" 
             AZURE_DNS_ZONE_RESOURCE_GROUP="buypotatoResourceGroup"
-            DNS_ID=$(az network dns zone show --name $AZURE_DNS_ZONE \
-            --resource-group $AZURE_DNS_ZONE_RESOURCE_GROUP --query "id" --output tsv)
+            DNS_ID=/subscriptions/a24f845d-8972-45b6-ab3d-9dd9e598dbeb/resourceGroups/buypotatoresourcegroup/providers/Microsoft.Network/dnszones/staging.wadestern.com
             echo $PRINCIPAL_ID
             echo $AZURE_DNS_ZONE
             echo $AZURE_DNS_ZONE_RESOURCE_GROUP
             echo $DNS_ID
+      - run:
+          name: Role assignment
+          command: az role assignment create --role "DNS Zone Contributor" --assignee $PRINCIPAL_ID --scope $DNS_ID
       - run:
           name: Create kubernetes secret and namespace
           command: |
