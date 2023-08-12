@@ -158,8 +158,6 @@ jobs:
   Run_staging_test:
     docker:
       - image: python:3.10
-        volumes:
-          - /dev/shm:/dev/shm
     steps:
       - checkout
       - run:
