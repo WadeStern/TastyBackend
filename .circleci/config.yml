@@ -164,10 +164,10 @@ jobs:
       - run:
           name: Install Dependencies and Run Test
           command: |
-            cd /root/project/stagingtest
-            pip install -r /root/project/stagingtest/requirements.txt
+            cd /home/seluser/project/stagingtest
+            pip install -r /home/seluser/project/stagingtest/requirements.txt
             pip install pymysql
-            python test_staging.py
+            python3 test_staging.py
             TEST_EXIT_CODE=$?
             cat test-results.xml
             if [[ $TEST_EXIT_CODE -ne 0 ]]; then
