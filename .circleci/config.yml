@@ -157,7 +157,7 @@ jobs:
     
   Run_staging_test:
     docker:
-      - image: python:3.10
+      - image: mudbone67/selechrome
         user: root
     steps:
       - checkout
