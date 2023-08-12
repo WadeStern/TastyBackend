@@ -158,6 +158,7 @@ jobs:
   Run_staging_test:
     docker:
       - image: selenium/standalone-chrome
+        user: root
     steps:
       - checkout
       - run:
