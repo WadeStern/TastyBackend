@@ -157,7 +157,7 @@ jobs:
     
   Run_staging_test:
     docker:
-      - image: mudbone67/selechrome
+      - image: mudbone67/selechrome:selenchrome
         user: root
     steps:
       - checkout
