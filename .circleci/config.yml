@@ -157,7 +157,7 @@ jobs:
     
   Run_staging_test:
     docker:
-      - image: selenium/standalone-chrome
+      - image: python:3.10
         user: root
     steps:
       - checkout
@@ -169,7 +169,7 @@ jobs:
             pip install pymysql
             python test_staging.py
             TEST_EXIT_CODE=$?
-            cat test-reports.xml
+            cat test-results.xml
             if [[ $TEST_EXIT_CODE -ne 0 ]]; then
               echo "Tests failed. Exiting with status $TEST_EXIT_CODE."
               exit $TEST_EXIT_CODE
