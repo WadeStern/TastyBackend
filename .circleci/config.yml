@@ -164,26 +164,24 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            find /root
+            cd /root/project/stagingtest
             pip install -r /root/project/stagingtest/requirements.txt
             pip install pymysql
-      - run:
-          name: Run Staging Tests
-          command: python /root/project/stagingtest/test_staging.py
+            python test_staging.py 
 
 workflows:
   build-and-test:
     jobs:
       #- test-python
-      - build_docker_image
+      #- build_docker_image
       #    requires:
       #      - test-python
-      - create_kubernetes_cluster:
-          requires:
-            - build_docker_image
-      - setup_dns_and_deploy:
-          requires:
-            - create_kubernetes_cluster
-      - Run_staging_test:
-          requires:
-            - setup_dns_and_deploy
+      #- create_kubernetes_cluster:
+      #    requires:
+      #      - build_docker_image
+      #- setup_dns_and_deploy:
+      #    requires:
+      #      - create_kubernetes_cluster
+      - Run_staging_test
+      #    requires:
+      #      - setup_dns_and_deploy
