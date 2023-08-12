@@ -1,6 +1,6 @@
 import requests
 import json
-import mysql.connector
+import pymysql
 from urllib.request import urlopen
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -41,7 +41,7 @@ class BackendCheckTestCase(unittest.TestCase):
 class DBCheckTestCase(unittest.TestCase):
     def test_db(self):
         try:
-            conn = mysql.connector.connect(
+            conn = pymysql.connect(
                 host=dbHost,
                 port=dbPort,
                 database=dbName,
@@ -50,7 +50,7 @@ class DBCheckTestCase(unittest.TestCase):
             )
             self.assertTrue(conn.is_connected(), "Database is not running.")
             conn.close()
-        except mysql.connector.Error as e:
+        except pymysql.Error as e:
             self.fail("An error occurred while connecting to the database: " + str(e))
 
 class FrontendBackendCheckTestCase(unittest.TestCase):

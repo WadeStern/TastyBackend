@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            #az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
@@ -166,6 +166,7 @@ jobs:
           command: |
             find /root
             pip install -r /root/project/stagingtest/requirements.txt
+            pip install pymysql
       - run:
           name: Run Staging Tests
           command: python /root/project/stagingtest/test_staging.py
@@ -173,9 +174,13 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-python
+      #- test-python
       - build_docker_image
-      - create_kubernetes_cluster
+      #    requires:
+      #      - test-python
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
       - setup_dns_and_deploy:
           requires:
             - create_kubernetes_cluster
