@@ -1,6 +1,6 @@
 <config>
-    <frontendurl>http://frontend.staging.mstern.com</frontendurl>
-    <backendurl>http://backend.staging.mstern.com</backendurl>
+    <frontendurl>http://frontend.staging.wadestern.com</frontendurl>
+    <backendurl>http://backend.staging.wadestern.com</backendurl>
     <dbHost>tastydb.cztaefsxo74p.us-east-2.rds.amazonaws.com</dbHost>
     <dbPort>3306</dbPort>
     <dbName>tasty</dbName>

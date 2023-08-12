@@ -33,7 +33,7 @@ class FrontendCheckTestCase(unittest.TestCase):
 class BackendCheckTestCase(unittest.TestCase):
     def test_backend(self):
         try:
-            response = requests.get(backendurl + '/python')
+            response = requests.get(backendurl + ':7200/python')
             self.assertEqual(response.status_code, 200, "Backend returned an error.")
         except requests.exceptions.RequestException as e:
             self.fail("An error occurred for the Backend: " + str(e))
@@ -72,7 +72,7 @@ class FrontendBackendCheckTestCase(unittest.TestCase):
 class BackendDBCheckTestCase(unittest.TestCase):
     def test_backend_db(self):
         try:
-            response = requests.get(backendurl+'/recipes/num/1')
+            response = requests.get(backendurl+':7200/recipes/num/1')
             self.assertEqual(response.status_code, 200, "Backend-DB returned an error.")
         except requests.exceptions.RequestException as e:
             self.fail("An error occurred for the Backend-DB connection: " + str(e))
