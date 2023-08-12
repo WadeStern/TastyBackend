@@ -158,7 +158,8 @@ jobs:
   Run_staging_test:
     docker:
       - image: python:3.10
-        user: root
+        volumes:
+          - /dev/shm:/dev/shm
     steps:
       - checkout
       - run:
@@ -174,14 +175,13 @@ jobs:
             cd /root/project/stagingtest
             pip install -r /root/project/stagingtest/requirements.txt
             pip install pymysql
-            TEST_OUTPUT=$(python test_staging.py 2>&1)
+            python test_staging.py
             TEST_EXIT_CODE=$?
-            echo "$TEST_OUTPUT"  # Print the test report
-
+            cat test-results.xml
             if [[ $TEST_EXIT_CODE -ne 0 ]]; then
               echo "Tests failed. Exiting with status $TEST_EXIT_CODE."
               exit $TEST_EXIT_CODE
-            fi 
+            fi
 
 workflows:
   build-and-test:

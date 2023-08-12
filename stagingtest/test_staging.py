@@ -55,7 +55,7 @@ class DBCheckTestCase(unittest.TestCase):
 
 class FrontendBackendCheckTestCase(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=webdriver.ChromeOptions().add_argument('--no-sandbox'))
 
     def tearDown(self):
         self.driver.quit()
