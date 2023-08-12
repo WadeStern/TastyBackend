@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Create Kubernetes Cluster
           command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
+            #az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
             az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
@@ -129,6 +129,31 @@ jobs:
       - run:
           name: Deploy frontend to Kubernetes
           command: kubectl --kubeconfig=/root/.kube/config apply -f /root/project/deploy/staging-frontend-deploy.yaml
+      - run:
+          name: Wait for external-dns pod to be running
+          command: |
+            timeout=240  # 4 minutes timeout
+            start_time=$(date +%s)
+            
+            while true; do
+              current_time=$(date +%s)
+              elapsed_time=$((current_time - start_time))
+              
+              if [ "$elapsed_time" -ge "$timeout" ]; then
+                echo "Timeout: External-dns pod didn't start within $timeout seconds."
+                exit 1
+              fi
+              
+              pod_status=$(kubectl --kubeconfig=/root/.kube/config get pods -n default -l app=external-dns -o jsonpath='{.items[0].status.phase}')
+              
+              if [ "$pod_status" = "Running" ]; then
+                echo "External-dns pod is now running."
+                break
+              else
+                echo "Waiting for external-dns pod to start..."
+                sleep 10  # Adjust the sleep duration as needed
+              fi
+            done
     
   Run_staging_test:
     docker:
@@ -148,12 +173,12 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      #- test-python
-      #- build_docker_image
+      - test-python
+      - build_docker_image
       - create_kubernetes_cluster
       - setup_dns_and_deploy:
           requires:
             - create_kubernetes_cluster
-      #- Run_staging_test:
-      #    requires:
-      #      - deploy_to_kubernetes
+      - Run_staging_test:
+          requires:
+            - setup_dns_and_deploy
