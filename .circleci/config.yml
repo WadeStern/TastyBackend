@@ -178,10 +178,6 @@ jobs:
           paths:
             - ./node_modules
       - run:
-          name: Run the application
-          command: node server.js
-          background: true
-      - run:
           name: Run tests
           command: npm run test
 
