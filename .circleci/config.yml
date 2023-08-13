@@ -155,25 +155,32 @@ jobs:
               fi
             done
     
-  Run_staging_test:
+  puppeteer_testing:
+    working_directory: ~/repo/testing
     docker:
-      - image: mudbone67/selechrome:selenchrome
-        user: root
+      - image: circleci/node:12-browsers
     steps:
       - checkout
       - run:
-          name: Install Dependencies and Run Test
-          command: |
-            cd /home/seluser
-            #pip install -r /home/seluser/project/stagingtest/requirements.txt
-            #pip install pymysql
-            python3 ./test_staging.py
-            TEST_EXIT_CODE=$?
-            cat test-results.xml
-            if [[ $TEST_EXIT_CODE -ne 0 ]]; then
-              echo "Tests failed. Exiting with status $TEST_EXIT_CODE."
-              exit $TEST_EXIT_CODE
-            fi
+          name: Update NPM
+          command: "sudo npm install -g npm"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run the application
+          command: node server.js
+          background: true
+      - run:
+          name: Run tests
+          command: npm run test
+
 
 workflows:
   build-and-test:
@@ -182,12 +189,12 @@ workflows:
       #- build_docker_image
       #    requires:
       #      - test-python
-      #- create_kubernetes_cluster:
+      #- create_kubernetes_cluster
       #    requires:
       #      - build_docker_image
       #- setup_dns_and_deploy:
       #    requires:
       #      - create_kubernetes_cluster
-      - Run_staging_test
+      - puppeteer_testing
       #    requires:
       #      - setup_dns_and_deploy
