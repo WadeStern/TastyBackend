@@ -163,7 +163,9 @@ jobs:
       - checkout
       - run:
           name: Update NPM
-          command: "sudo npm install -g npm"
+          command: |
+            "sudo npm install -g npm"
+            find ~/repo
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
