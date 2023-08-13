@@ -158,7 +158,7 @@ jobs:
   puppeteer_testing:
     working_directory: ~/repo/testing
     docker:
-      - image: circleci/node:20.5.1-browsers
+      - image: circleci/node:18.17.1-browsers
     steps:
       - checkout:
           path: ~/repo
