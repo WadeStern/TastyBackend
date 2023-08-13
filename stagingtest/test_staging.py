@@ -3,6 +3,8 @@ import json
 import pymysql
 from urllib.request import urlopen
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 import xml.etree.ElementTree as ET
 import unittest
@@ -55,7 +57,22 @@ class DBCheckTestCase(unittest.TestCase):
 
 class FrontendBackendCheckTestCase(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(options=webdriver.ChromeOptions().add_argument('--no-sandbox'))
+        #remote_url = "http://selenchrome.adahckfdc0g4bkbv.eastus.azurecontainer.io:4444"
+        #remote_url = "http://192.168.2.130:4444/wd/hub"
+        #chrome_options = webdriver.ChromeOptions()
+        #chrome_options.set_capability("browserVersion", "67")
+        #chrome_options.set_capability("platformName", "Windows XP")
+        #self.driver = webdriver.Remote(command_executor=remote_url, options=chrome_options)
+        #self.driver = webdriver.Chrome(options=webdriver.ChromeOptions().add_argument('--no-sandbox'))
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.set_capability("browserVersion", "67")
+        chrome_options.set_capability("platformName", "Windows XP")
+        driver = webdriver.Remote(
+        command_executor='http://192.168.2.130:4444/',
+        options=chrome_options
+        )
+        driver.get("http://www.google.com")
+        driver.quit()
 
     def tearDown(self):
         self.driver.quit()
