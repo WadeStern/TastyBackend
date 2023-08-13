@@ -159,7 +159,7 @@ jobs:
   puppeteer_testing:
     working_directory: ~/repo/testing
     docker:
-      - image: cimg/node:18.17.1-browsers
+      - image: cimg/node:20.5.1-browsers
     steps:
       - browser-tools/install-browser-tools
       - checkout:
