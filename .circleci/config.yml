@@ -156,11 +156,12 @@ jobs:
             done
     
   puppeteer_testing:
-    working_directory: ~/repo
+    working_directory: ~/repo/testing
     docker:
       - image: circleci/node:12-browsers
     steps:
       - checkout
+          path: ~/repo
       - run:
           name: find files
           command: find ~/repo
@@ -168,17 +169,17 @@ jobs:
           name: Update NPM
           command: "sudo npm install -g npm"
       - restore_cache:
-          key: dependency-cache-{{ checksum "./testing/package-lock.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "./testing/package-lock.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - run:
           name: Run the application
-          command: node ./testing/server.js
+          command: node server.js
           background: true
       - run:
           name: Run tests
