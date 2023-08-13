@@ -172,7 +172,9 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: upgrade Node
-          command: sudo npm install -g --upgrade node
+          command: |
+            sudo npm install -g n
+            sudo n latest
       - run:
           name: Install Dependencies
           command: npm install
