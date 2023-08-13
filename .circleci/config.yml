@@ -168,17 +168,17 @@ jobs:
           name: Update NPM
           command: "sudo npm install -g npm"
       - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "./testing/package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "./testing/package-lock.json" }}
           paths:
             - ./node_modules
       - run:
           name: Run the application
-          command: node testing/server.js
+          command: node ./testing/server.js
           background: true
       - run:
           name: Run tests
