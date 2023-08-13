@@ -158,7 +158,7 @@ jobs:
   puppeteer_testing:
     working_directory: ~/repo/testing
     docker:
-      - image: circleci/node:12-browsers
+      - image: circleci/node:20.5.1-browsers
     steps:
       - checkout:
           path: ~/repo
@@ -167,14 +167,7 @@ jobs:
           command: find ~/repo
       - run:
           name: Update NPM
-          command: "sudo npm install -g npm@7"
-      - run:
-          name: upgrade node
-          command: |
-            npm install -g n
-            n latest
-            node -v
-            npm version
+          command: sudo npm install -g npm
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
