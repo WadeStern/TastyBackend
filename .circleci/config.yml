@@ -176,12 +176,15 @@ workflows:
       #- build_docker_image #:
       #    requires:
       #      - test-python
-      - create_kubernetes_cluster #:
+      #- create_kubernetes_cluster #:
       #    requires:
       #      - build_docker_image
-      - setup_dns_and_deploy:
-          requires:
-            - create_kubernetes_cluster
-      - puppeteer_testing:
-          requires:
-            - setup_dns_and_deploy
+      #- setup_dns_and_deploy:
+      #    requires:
+      #      - create_kubernetes_cluster
+      - puppeteer_testing #:
+      #    requires:
+      #      - setup_dns_and_deploy
+      - hold:
+          type: approval
+          requires: puppeteer_testing
