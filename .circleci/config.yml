@@ -157,14 +157,15 @@ jobs:
             done
     
   puppeteer_testing:
-    working_directory: ~/TastyBackend/testing
+    working_directory: ~/repo/testing
     docker:
       - image: mudbone67/node-pup-chr
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
       - run:
-          name: check files
-          command: find /root
+          name: find files
+          command: find ~/repo
       - run:
           name: Update NPM
           command: npm install -g npm
@@ -189,7 +190,7 @@ workflows:
       #- build_docker_image #:
       #    requires:
       #      - test-python
-      #- create_kubernetes_cluster:
+      #- create_kubernetes_cluster
       #    requires:
       #      - build_docker_image
       #- setup_dns_and_deploy:
