@@ -188,3 +188,10 @@ workflows:
       - discord/approval-notification:
           message: Pending approval
           webhook: https://discord.com/api/webhooks/1140781214911959142/jAlj5UWDX_YvGbg77DuEgDJT8VWOPzO3_A0PfpwqoaUWXUxRicbawKqz2K8vLlTtwfwO
+          requires:
+            -puppeteer_testing
+      - hold:
+          type: approval
+          requires:
+            - puppeteer_testing
+      
