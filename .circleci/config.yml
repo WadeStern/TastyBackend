@@ -168,11 +168,13 @@ jobs:
           name: Run tests
           command: npm test -- --forceExit
 
-  hold_with_notification: 
+  hold_with_notification:
+    docker:
+      - image: circleci/node:12
     steps:
       - discord/notify:
-        message: Pending approval
-        webhook: ${DISCORDWEBHOOK}
+          message: Pending approval
+          webhook: ${DISCORDWEBHOOK}
 
 
 workflows:
@@ -191,7 +193,7 @@ workflows:
       - puppeteer_testing
       #    requires:
       #      - setup_dns_and_deploy
-      - hold:
+      - hold_with_notification:
           type: approval
           requires:
             - puppeteer_testing
