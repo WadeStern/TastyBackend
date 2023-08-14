@@ -161,7 +161,6 @@ jobs:
     docker:
       - image: mudbone67/node-pup-chr
     steps:
-      - browser-tools/install-browser-tools
       - checkout:
           path: ~/repo
       - run:
