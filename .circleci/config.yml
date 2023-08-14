@@ -140,7 +140,7 @@ jobs:
                 else
                   break
                 fi
-              done
+              done 
     
   puppeteer_testing:
     working_directory: ~/repo/testing
