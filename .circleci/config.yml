@@ -187,15 +187,15 @@ workflows:
   build-and-test:
     jobs:
       #- test-python
-      #- build_docker_image
+      - build_docker_image
       #    requires:
       #      - test-python
-      #- create_kubernetes_cluster
-      #    requires:
-      #      - build_docker_image
-      #- setup_dns_and_deploy:
-      #    requires:
-      #      - create_kubernetes_cluster
-      - puppeteer_testing
-      #    requires:
-      #      - setup_dns_and_deploy
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
+      - setup_dns_and_deploy:
+          requires:
+            - create_kubernetes_cluster
+      - puppeteer_testing:
+          requires:
+            - setup_dns_and_deploy
