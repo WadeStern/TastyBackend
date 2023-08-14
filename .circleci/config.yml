@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2
   kubernetes: circleci/kubernetes@1.3.1
-  browser-tools: circleci/browser-tools@1.1.0
+  discord: teka23/discord@x.y.z
 jobs:
   test-python:
     docker:
@@ -185,7 +185,6 @@ workflows:
       - puppeteer_testing
       #    requires:
       #      - setup_dns_and_deploy
-      - hold: 
-          type: approval 
-          requires:
-           - puppeteer_testing
+      - discord/approval-notification:
+          message: Pending approval
+          webhook: https://discord.com/api/webhooks/1140781214911959142/jAlj5UWDX_YvGbg77DuEgDJT8VWOPzO3_A0PfpwqoaUWXUxRicbawKqz2K8vLlTtwfwO
