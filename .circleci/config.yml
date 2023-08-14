@@ -183,8 +183,9 @@ workflows:
       #    requires:
       #      - create_kubernetes_cluster
       - puppeteer_testing #:
-      #    requires:
-      #      - setup_dns_and_deploy
-      - hold:
-          type: approval
-          requires: puppeteer_testing
+          requires:
+            - setup_dns_and_deploy
+      - hold: 
+          type: approval 
+          requires:
+           - test2
