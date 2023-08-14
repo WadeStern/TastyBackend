@@ -162,6 +162,9 @@ jobs:
           paths:
             - ./node_modules  
       - run:
+          name: Wait for 1 Minute
+          command: sleep 60
+      - run:
           name: Run tests
           command: npm test -- --forceExit
 
