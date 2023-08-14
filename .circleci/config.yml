@@ -188,4 +188,4 @@ workflows:
       - hold: 
           type: approval 
           requires:
-           - test2
+           - puppeteer_testing
