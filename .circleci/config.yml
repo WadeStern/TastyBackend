@@ -163,6 +163,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: check files
+          command: find /root
+      - run:
           name: Update NPM
           command: npm install -g npm
       - restore_cache:
