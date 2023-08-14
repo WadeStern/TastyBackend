@@ -157,7 +157,7 @@ jobs:
             done
     
   puppeteer_testing:
-    working_directory: ~/testing
+    working_directory: ~/TastyBackend/testing
     docker:
       - image: mudbone67/node-pup-chr
     steps:
