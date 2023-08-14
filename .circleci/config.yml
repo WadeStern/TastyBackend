@@ -159,7 +159,7 @@ jobs:
   puppeteer_testing:
     working_directory: ~/repo/testing
     docker:
-      - image: cimg/node:20.5.1-browsers
+      - image: mudbone67/node-pup-chr
     steps:
       - browser-tools/install-browser-tools
       - checkout:
@@ -181,7 +181,7 @@ jobs:
             - ./node_modules
       - run:
           name: Run tests
-          command: npm run test
+          command: npm test -- --forceExit
 
 
 workflows:
