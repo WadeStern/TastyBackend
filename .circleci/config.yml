@@ -164,8 +164,10 @@ jobs:
       - checkout:
           path: ~/repo
       - run:
-          name: find files
-          command: find ~/repo
+          name: Login to Azure
+          command: |
+            az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"
+            az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - run:
           name: Update NPM
           command: npm install -g npm
@@ -179,6 +181,27 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: Wait for Pods to be Running
+          command: |
+            NAMESPACE="your-namespace"
+            POD_LABELS="app=my-app"
+            TIMEOUT=300
+            END_TIME=$((SECONDS + TIMEOUT))
+            while [ $SECONDS -lt $END_TIME ]; do
+                POD_STATUSES=$(kubectl get pods -n $NAMESPACE -l $POD_LABELS -o jsonpath='{.items[*].status.phase}')
+                if [[ $POD_STATUSES == *"Running"* ]]; then
+                    echo "All pods are in Running state."
+                    break
+                else
+                    echo "Waiting for pods to be in Running state..."
+                    sleep 10
+                fi
+            done
+            if [ $SECONDS -ge $END_TIME ]; then
+                echo "Timeout reached. Pods are not in Running state."
+                exit 1
+            fi
+      - run:
           name: Run tests
           command: npm test -- --forceExit
 
@@ -187,15 +210,15 @@ workflows:
   build-and-test:
     jobs:
       #- test-python
-      #- build_docker_image #:
+      - build_docker_image #:
       #    requires:
       #      - test-python
-      #- create_kubernetes_cluster
-      #    requires:
-      #      - build_docker_image
-      #- setup_dns_and_deploy:
-      #    requires:
-      #      - create_kubernetes_cluster
-      - puppeteer_testing #:
-      #    requires:
-      #      - setup_dns_and_deploy
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
+      - setup_dns_and_deploy:
+          requires:
+            - create_kubernetes_cluster
+      - puppeteer_testing:
+          requires:
+            - setup_dns_and_deploy
