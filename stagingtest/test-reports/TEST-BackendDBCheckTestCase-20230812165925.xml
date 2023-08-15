@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<testsuite name="BackendDBCheckTestCase-20230812165925" tests="1" time="0.090" failures="0" errors="0">
-	<testcase classname="BackendDBCheckTestCase" name="test_backend_db" time="0.090"/>
-	<system-out><![CDATA[]]></system-out>
-	<system-err><![CDATA[]]></system-err>
-</testsuite>

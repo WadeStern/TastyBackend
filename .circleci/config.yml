@@ -16,7 +16,7 @@ jobs:
           pypi-cache: false
       - run:
           name: Run tests
-          command: pytest --junitxml=junit.xml
+          command: pytest test_main.py --junitxml=junit.xml
       - store_test_results:
           path: junit.xml
       - run:
@@ -180,7 +180,7 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      #- test-python
+      - test-python
       #- build_docker_image #:
       #    requires:
       #      - test-python
