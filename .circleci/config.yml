@@ -151,20 +151,20 @@ jobs:
           message: Pending approval
           webhook: ${DISCORDWEBHOOK}
   
-  Create_and_deploy_prod:
-    docker:
-      - dudesm00thie/kubeeks
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /root
-      - run:
-          name: Login to AWS
-          command: |
-            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
-            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
-            aws configure set default.region us-east-1
-            aws configure set default.output json
+#  Create_and_deploy_prod:
+#    docker:
+#      - dudesm00thie/kubeeks
+#    steps:
+#      - checkout
+#      - attach_workspace:
+#          at: /root
+#      - run:
+#          name: Login to AWS
+#          command: |
+#            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
+#            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
+#            aws configure set default.region us-east-1
+#            aws configure set default.output json
 
 
 
