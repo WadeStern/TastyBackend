@@ -158,7 +158,10 @@ jobs:
       - checkout
       - run:
           name: Find files
-          command: find /root
+          command: |
+            pwd
+            find /root
+
   
   
   Create_and_deploy_prod:
