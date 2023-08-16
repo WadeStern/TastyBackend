@@ -156,7 +156,7 @@ jobs:
 #      - dudesm00thie/kubeeks
 #    steps:
 #      - checkout
-#      - attach_workspace:
+#      - attach_workspace: 
 #          at: /root
 #      - run:
 #          name: Login to AWS
