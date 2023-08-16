@@ -189,7 +189,7 @@ jobs:
             --attach-policy-arn $POLICY_ARN \
             --approve
             #Kubectl statements
-            kubectl create namespace default
+            #kubectl create namespace default
             kubectl create --filename externaldns-with-rbac.yaml \
             --namespace default
             #Apply frontend/backend
