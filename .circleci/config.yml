@@ -151,20 +151,20 @@ jobs:
           message: Pending approval
           webhook: ${DISCORDWEBHOOK}
   
-#  Create_and_deploy_prod:
-#    docker:
-#      - dudesm00thie/kubeeks
-#    steps:
-#      - checkout
-#      - attach_workspace: 
-#          at: /root
-#      - run:
-#          name: Login to AWS
-#          command: |
-#            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
-#            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
-#            aws configure set default.region us-east-1
-#            aws configure set default.output json
+  Create_and_deploy_prod:
+    docker:
+      - dudesm00thie/kubeeks
+    steps:
+      - checkout
+      - attach_workspace: 
+          at: /root
+      - run:
+          name: Login to AWS
+          command: |
+            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
+            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
+            aws configure set default.region us-east-1
+            aws configure set default.output json
 
 
 
@@ -172,24 +172,24 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-python
-      - build_docker_image:
-          requires:
-            - test-python
-      - create_kubernetes_cluster:
-          requires:
-            - build_docker_image
-      - setup_dns_and_deploy:
-          requires:
-            - create_kubernetes_cluster
-      - puppeteer_testing:
-          requires:
-            - setup_dns_and_deploy
-      - hold_notification:
-          requires:
-            - puppeteer_testing
-      - hold:
-          type: approval
-          requires:
-            - puppeteer_testing
-      
+#      - test-python
+#      - build_docker_image:
+#          requires:
+#            - test-python
+#      - create_kubernetes_cluster:
+#          requires:
+#            - build_docker_image
+#      - setup_dns_and_deploy:
+#          requires:
+#            - create_kubernetes_cluster
+#      - puppeteer_testing:
+#          requires:
+#            - setup_dns_and_deploy
+#      - hold_notification:
+#          requires:
+#            - puppeteer_testing
+#      - hold:
+#          type: approval
+#          requires:
+#            - puppeteer_testing
+      - Create_and_deploy_prod
