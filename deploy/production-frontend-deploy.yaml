@@ -38,4 +38,4 @@ spec:
         - name: BACKEND_PORT
           value: "7200"
         - name: BACKEND_URL
-          value: "backend.prod.mstern.com"
+          value: "backend.prod.wadestern.com"

@@ -36,4 +36,4 @@ spec:
         - containerPort: 7200
         env:
         - name: FRONTEND_HOST
-          value: frontend.prod.mstern.com
+          value: frontend.prod.wadestern.com

@@ -173,23 +173,23 @@ workflows:
   build-and-test:
     jobs:
       - test-python
-      #- build_docker_image #:
-      #    requires:
-      #      - test-python
-      #- create_kubernetes_cluster #:
-      #    requires:
-      #      - build_docker_image
-      #- setup_dns_and_deploy:
-      #    requires:
-      #      - create_kubernetes_cluster
-      #- puppeteer_testing
-      #    requires:
-      #      - setup_dns_and_deploy
-      #- hold_notification:
-      #    requires:
-      #      - puppeteer_testing
-      #- hold:
-      #    type: approval
-      #    requires:
-      #      - puppeteer_testing
+      - build_docker_image:
+          requires:
+            - test-python
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
+      - setup_dns_and_deploy:
+          requires:
+            - create_kubernetes_cluster
+      - puppeteer_testing
+          requires:
+            - setup_dns_and_deploy
+      - hold_notification:
+          requires:
+            - puppeteer_testing
+      - hold:
+          type: approval
+          requires:
+            - puppeteer_testing
       
