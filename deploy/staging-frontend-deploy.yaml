@@ -35,7 +35,7 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: BACKEND_PORT
+        - name: REACT_APP_BACKEND_PORT
           value: "7200"
-        - name: BACKEND_URL
+        - name: REACT_APP_BACKEND_URL
           value: "backend.staging.wadestern.com"
