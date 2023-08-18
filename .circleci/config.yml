@@ -226,6 +226,12 @@ jobs:
       - run:
           name: cleanup AWS
           command: |
+            export POLICY_ARN=$(aws iam list-policies \
+            --query 'Policies[?PolicyName==`AllowExternalDNSUpdates`].Arn' --output text)
+            export EKS_CLUSTER_NAME="buypotatoprod"
+            export EKS_CLUSTER_REGION="us-east-1"
+            export KUBECONFIG="$HOME/.kube/${EKS_CLUSTER_NAME}-${EKS_CLUSTER_REGION}.yaml"
+            export AWS_PAGER=""
             eksctl delete cluster --name $EKS_CLUSTER_NAME --region $EKS_CLUSTER_REGION
             aws cloudformation delete-stack --stack-name eksctl-buypotatoprod-cluster
             export AWS_PAGER=""
