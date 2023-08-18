@@ -208,10 +208,6 @@ jobs:
             #Apply frontend/backend
             kubectl apply -f deploy/prod-backend-deploy.yaml
             kubectl apply -f deploy/production-frontend-deploy.yaml
-      - persist_to_workspace:
-          root: /root
-          paths:
-            - .kube/config
 
   AWS_Cleanup:
     docker:
@@ -258,12 +254,12 @@ workflows:
 #          type: approval
 #          requires:
 #            - puppeteer_testing
-      - Create_and_deploy_prod
-      - hold:
-          type: approval
-          requires:
-            - Create_and_deploy_prod
-      - AWS_Cleanup:
-          requires: 
-            - hold
+#      - Create_and_deploy_prod
+#      - hold:
+#          type: approval
+#          requires:
+#            - Create_and_deploy_prod
+      - AWS_Cleanup #:
+#          requires: 
+#            - hold
 
