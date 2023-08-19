@@ -139,8 +139,8 @@ jobs:
           paths:
             - ./node_modules  
       - run:
-          name: Wait for 1 Minute
-          command: sleep 60
+          name: Wait
+          command: sleep 120
       - run:
           name: List Environment Variables
           command: printenv
@@ -170,8 +170,8 @@ jobs:
           paths:
             - ./node_modules  
       - run:
-          name: Wait for 1 Minute
-          command: sleep 60
+          name: Wait 
+          command: sleep 120
       - run:
           name: Run tests
           command: npm test -- --forceExit
