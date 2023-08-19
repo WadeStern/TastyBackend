@@ -121,6 +121,8 @@ jobs:
     working_directory: ~/repo/testing
     docker:
       - image: mudbone67/node-pup-chr
+    environment:
+      prodorstaging: staging
     steps:
       - checkout:
           path: ~/repo
@@ -147,6 +149,8 @@ jobs:
     working_directory: ~/repo/testing
     docker:
       - image: mudbone67/node-pup-chr
+    environment:
+      prodorstaging: prod
     steps:
       - checkout:
           path: ~/repo
@@ -277,8 +281,6 @@ workflows:
       - puppeteer_testing:
           requires:
             - setup_dns_and_deploy
-          environment:
-            prodorstaging: "staging"
       - hold_notification:
           requires:
             - puppeteer_testing
@@ -292,8 +294,6 @@ workflows:
       - puppeteer_testing2:
           requires:
             - Create_and_deploy_prod
-          environment:
-            prodorstaging: "prod"
       - hold_cleanup:
           type: approval
           requires:
