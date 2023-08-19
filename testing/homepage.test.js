@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 jest.setTimeout(60000);
 
-const prodorstaging = process.env.PRODORSTAGING;
+const prodorstaging = process.env.prodorstaging;
 
 test("Get Title", async () => {
   const browser = await puppeteer.launch({
