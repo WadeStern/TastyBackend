@@ -143,6 +143,32 @@ jobs:
           name: Run tests
           command: npm test -- --forceExit
 
+  puppeteer_testing2:
+    working_directory: ~/repo/testing
+    docker:
+      - image: mudbone67/node-pup-chr
+    steps:
+      - checkout:
+          path: ~/repo
+      - run:
+          name: Update NPM
+          command: npm install -g npm
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules  
+      - run:
+          name: Wait for 1 Minute
+          command: sleep 60
+      - run:
+          name: Run tests
+          command: npm test -- --forceExit
+
   hold_notification:
     docker:
       - image: circleci/node:12
@@ -162,8 +188,6 @@ jobs:
             pwd
             find /root
 
-  
-  
   Create_and_deploy_prod:
     docker:
       - image: dudesm00thie/kubeeks
@@ -240,32 +264,41 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-#      - test-python
-#      - build_docker_image:
-#          requires:
-#            - test-python
-#      - create_kubernetes_cluster:
-#          requires:
-#            - build_docker_image
-#      - setup_dns_and_deploy:
-#          requires:
-#            - create_kubernetes_cluster
-#      - puppeteer_testing:
-#          requires:
-#            - setup_dns_and_deploy
-#      - hold_notification:
-#          requires:
-#            - puppeteer_testing
-#      - hold:
-#          type: approval
-#          requires:
-#            - puppeteer_testing
-#      - Create_and_deploy_prod
-#      - hold:
-#          type: approval
-#          requires:
-#            - Create_and_deploy_prod
-      - AWS_Cleanup #:
-#          requires: 
-#            - hold
+      - test-python
+      - build_docker_image:
+          requires:
+            - test-python
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
+      - setup_dns_and_deploy:
+          requires:
+            - create_kubernetes_cluster
+      - puppeteer_testing:
+          requires:
+            - setup_dns_and_deploy
+          environment:
+            prodorstaging: "staging"
+      - hold_notification:
+          requires:
+            - puppeteer_testing
+      - hold_puppeteer:
+          type: approval
+          requires:
+            - puppeteer_testing
+      - Create_and_deploy_prod:
+          requires:
+            - hold_puppeteer
+      - puppeteer_testing2:
+          requires:
+            - Create_and_deploy_prod
+          environment:
+            prodorstaging: "prod"
+      - hold_cleanup:
+          type: approval
+          requires:
+            - puppeteer_testing
+      - AWS_Cleanup:
+          requires: 
+            - hold_cleanup
 
