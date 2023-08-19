@@ -282,7 +282,7 @@ jobs:
       - run:
           name: Delete Kubernetes Cluster
           command: |
-            az aks delete --resource-group buypotatoResourceGroup --name buypotatoStaging
+            az aks delete --resource-group buypotatoResourceGroup --name buypotatoStaging --yes
 
 
 workflows:
