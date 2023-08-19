@@ -267,23 +267,40 @@ jobs:
             aws cloudformation delete-stack --stack-name eksctl-buypotatoprod-cluster
             export AWS_PAGER=""
 
+  Azure_Cleanup:
+    docker:
+      - image: dudesm00thie/kubeaz:latest
+        user: root
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Login to Azure
+          command: |
+            az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"
+      - run:
+          name: Delete Kubernetes Cluster
+          command: |
+            az aks delete --resource-group buypotatoResourceGroup --name buypotatoStaging
+
 
 workflows:
   build-and-test:
     jobs:
-#      - test-python
-#      - build_docker_image:
-#          requires:
-#            - test-python
-#      - create_kubernetes_cluster:
-#          requires:
-#            - build_docker_image
-#      - setup_dns_and_deploy:
-#          requires:
-#            - create_kubernetes_cluster
-      - puppeteer_testing #:
-#          requires:
-#            - setup_dns_and_deploy
+      - test-python
+      - build_docker_image:
+          requires:
+            - test-python
+      - create_kubernetes_cluster:
+          requires:
+            - build_docker_image
+      - setup_dns_and_deploy:
+          requires:
+            - create_kubernetes_cluster
+      - puppeteer_testing :
+          requires:
+            - setup_dns_and_deploy
       - hold_notification:
           requires:
             - puppeteer_testing
@@ -297,6 +314,9 @@ workflows:
       - puppeteer_testing2:
           requires:
             - Create_and_deploy_prod
+      - Azure_Cleanup:
+          requires:
+            - puppeteer_testing2
       - hold_cleanup:
           type: approval
           requires:
