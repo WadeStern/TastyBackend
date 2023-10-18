@@ -315,7 +315,7 @@ jobs:
             records=("frontend" "backend")
       
             for record in "${records[@]}"; do
-              az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "$record" --cname "$record_cname" --yes
+              az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "$record" --cname "$record_cname"
             done
 
       - run:
