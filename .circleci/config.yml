@@ -28,7 +28,7 @@ jobs:
 
   build_docker_image:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:18.18.2
     steps:
       - checkout
       - setup_remote_docker:
@@ -59,6 +59,15 @@ jobs:
             chmod 600 ~/.ssh/id_rsa
             echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
             chmod 600 ~/.ssh/id_rsa.pub
+      - run:
+          name: Delete DNS Records
+          command: |
+            dns_zone="staging.wadestern.com"
+            records=("frontend.staging.wadestern.com" "backend.staging.wadestern.com")
+            
+            for record in "${records[@]}"; do
+              az network dns record-set a delete --zone-name "$dns_zone" --name "$record" --yes
+            done
       - run:
           name: Create Kubernetes Cluster
           command: |
@@ -295,36 +304,36 @@ workflows:
       - create_kubernetes_cluster:
           requires:
             - build_docker_image
-      - setup_dns_and_deploy:
-          requires:
-            - create_kubernetes_cluster
-      - puppeteer_testing :
-          requires:
-            - setup_dns_and_deploy
-      - hold_notification:
-          requires:
-            - puppeteer_testing
-      - hold_puppeteer:
-          type: approval
-          requires:
-            - puppeteer_testing
-      - Create_and_deploy_prod:
-          requires:
-            - hold_puppeteer
-      - puppeteer_testing2:
-          requires:
-            - Create_and_deploy_prod
-      - Azure_Cleanup:
-          requires:
-            - puppeteer_testing2
-      - hold_cleanup:
-          type: approval
-          requires:
-            - puppeteer_testing2
-      - hold_notification:
-          requires:
-            - puppeteer_testing2
-      - AWS_Cleanup:
-          requires: 
-            - hold_cleanup
+#      - setup_dns_and_deploy:
+#          requires:
+#            - create_kubernetes_cluster
+#      - puppeteer_testing :
+#          requires:
+#            - setup_dns_and_deploy
+#      - hold_notification:
+#          requires:
+#            - puppeteer_testing
+#      - hold_puppeteer:
+#          type: approval
+#          requires:
+#            - puppeteer_testing
+#      - Create_and_deploy_prod:
+#          requires:
+#            - hold_puppeteer
+#      - puppeteer_testing2:
+#          requires:
+#            - Create_and_deploy_prod
+#      - Azure_Cleanup:
+#          requires:
+#            - puppeteer_testing2
+#      - hold_cleanup:
+#          type: approval
+#          requires:
+#            - puppeteer_testing2
+#      - hold_notification:
+#          requires:
+#            - puppeteer_testing2
+#      - AWS_Cleanup:
+#          requires: 
+#            - hold_cleanup
 
