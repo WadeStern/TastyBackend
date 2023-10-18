@@ -68,11 +68,21 @@ jobs:
             for record in "${records[@]}"; do
               az network dns record-set cname delete --zone-name "$dns_zone" --name "$record" --resource-group "buypotatoResourceGroup" --yes
             done
-      #- run:
-      #    name: Create Kubernetes Cluster
-      #    command: |
-      #      az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
-      #      az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
+      - run:
+          name: Create DNS Records
+          command: |
+            dns_zone="staging.wadestern.com"
+            record_cname="projects.wadestern.com.s3-website-us-east-1.amazonaws.com"
+            records=("frontend" "backend")
+      
+            for record in "${records[@]}"; do
+              az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "$record" --cname "$record_cname" --yes
+            done
+      - run:
+          name: Create Kubernetes Cluster
+          command: |
+            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
+            az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
           paths:
@@ -288,6 +298,26 @@ jobs:
           name: Login to Azure
           command: |
             az login --service-principal --username "${AZURE_CLIENT_ID}" --password "${AZURE_CLIENT_SECRET}" --tenant "${AZURE_TENANT_ID}"
+      - run:
+          name: Delete  DNS Records
+          command: |
+            dns_zone="staging.wadestern.com"
+            records=("frontend" "backend")
+            
+            for record in "${records[@]}"; do
+              az network dns record-set a delete --zone-name "$dns_zone" --name "$record" --resource-group "buypotatoResourceGroup" --yes
+            done
+      - run:
+          name: Create DNS Records
+          command: |
+            dns_zone="staging.wadestern.com"
+            record_cname="projects.wadestern.com.s3-website-us-east-1.amazonaws.com"
+            records=("frontend" "backend")
+      
+            for record in "${records[@]}"; do
+              az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "$record" --cname "$record_cname" --yes
+            done
+
       - run:
           name: Delete Kubernetes Cluster
           command: |
