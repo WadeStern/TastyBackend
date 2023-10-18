@@ -63,16 +63,16 @@ jobs:
           name: Delete DNS Records
           command: |
             dns_zone="staging.wadestern.com"
-            records=("frontend.staging.wadestern.com" "backend.staging.wadestern.com")
+            records=("frontend" "backend")
             
             for record in "${records[@]}"; do
               az network dns record-set cname delete --zone-name "$dns_zone" --name "$record" --resource-group "buypotatoResourceGroup" --yes
             done
-      - run:
-          name: Create Kubernetes Cluster
-          command: |
-            az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
-            az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
+      #- run:
+      #    name: Create Kubernetes Cluster
+      #    command: |
+      #      az aks create -g buypotatoResourceGroup -n buypotatoStaging --node-count 2 --ssh-key-value ~/.ssh/id_rsa.pub
+      #      az aks get-credentials --resource-group buypotatoResourceGroup --name buypotatoStaging
       - persist_to_workspace:
           root: /root
           paths:
