@@ -74,9 +74,9 @@ jobs:
             dns_zone="staging.wadestern.com"
             record_cname="projects.wadestern.com.s3-website-us-east-1.amazonaws.com"
             records=("frontend" "backend")
-      
+    
             for record in "${records[@]}"; do
-              az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "$record" --cname "$record_cname"
+              az network dns record-set cname set-record --resource-group "buypotatoResourceGroup" --zone-name "$dns_zone" --record-set-name "@" --cname "$record" --cname "$record_cname"
             done
       - run:
           name: Create Kubernetes Cluster
