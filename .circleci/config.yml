@@ -346,23 +346,23 @@ workflows:
 #          type: approval
 #          requires:
 #            - puppeteer_testing
-      - Create_and_deploy_prod #:
+#      - Create_and_deploy_prod #:
 #          requires:
 #            - hold_puppeteer
-      - puppeteer_testing2:
-          requires:
-            - Create_and_deploy_prod
+#      - puppeteer_testing2:
+#          requires:
+#            - Create_and_deploy_prod
 #      - Azure_Cleanup:
 #          requires:
 #            - puppeteer_testing2
-      - hold_cleanup:
-          type: approval
-          requires:
-            - puppeteer_testing2
-      - hold_notification:
-          requires:
-            - puppeteer_testing2
-      - AWS_Cleanup:
-          requires: 
-            - hold_cleanup
+#      - hold_cleanup:
+#          type: approval
+#          requires:
+#            - puppeteer_testing2
+#      - hold_notification:
+#          requires:
+#            - puppeteer_testing2
+      - AWS_Cleanup #:
+#          requires: 
+#            - hold_cleanup
 
