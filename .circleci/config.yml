@@ -212,44 +212,6 @@ jobs:
           command: |
             pwd
             find /root
-
-  delete_dns_records:
-    docker:
-      - image: dudesm00thie/kubeeks
-    steps:
-      - checkout
-      - run:
-          name: Login to AWS
-          command: |
-            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
-            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
-            aws configure set default.region us-east-1
-            aws configure set default.output json
-      - run:
-          name: Delete DNS Records
-          command: |
-            # Replace YOUR_ZONE_ID with the actual Route 53 hosted zone ID
-            YOUR_ZONE_ID="Z04657543MVVFNU39NC7S"
-            aws route53 change-resource-record-sets --hosted-zone-id $YOUR_ZONE_ID --change-batch '{
-            "Changes": [
-              {
-                "Action": "UPSERT",
-                "ResourceRecordSet": {
-                  "Name": "frontend.prod.wadestern.com.",
-                  "Type": "A",
-                  "ResourceRecords": []
-                }
-              },
-              {
-                "Action": "UPSERT",
-                "ResourceRecordSet": {
-                  "Name": "backend.prod.wadestern.com.",
-                  "Type": "A",
-                  "ResourceRecords": []
-                }
-              }
-            ]
-            }'
             
   Create_and_deploy_prod:
     docker:
@@ -371,7 +333,6 @@ workflows:
 #      - create_kubernetes_cluster:
 #          requires:
 #            - build_docker_image
-      - delete_dns_records
 #      - setup_dns_and_deploy:
 #          requires:
 #            - create_kubernetes_cluster
@@ -385,23 +346,23 @@ workflows:
 #          type: approval
 #          requires:
 #            - puppeteer_testing
-#      - Create_and_deploy_prod:
+      - Create_and_deploy_prod #:
 #          requires:
 #            - hold_puppeteer
-#      - puppeteer_testing2:
-#          requires:
-#            - Create_and_deploy_prod
+      - puppeteer_testing2:
+          requires:
+            - Create_and_deploy_prod
 #      - Azure_Cleanup:
 #          requires:
 #            - puppeteer_testing2
-#      - hold_cleanup:
-#          type: approval
-#          requires:
-#            - puppeteer_testing2
-#      - hold_notification:
-#          requires:
-#            - puppeteer_testing2
-#      - AWS_Cleanup:
-#          requires: 
-#            - hold_cleanup
+      - hold_cleanup:
+          type: approval
+          requires:
+            - puppeteer_testing2
+      - hold_notification:
+          requires:
+            - puppeteer_testing2
+      - AWS_Cleanup:
+          requires: 
+            - hold_cleanup
 
