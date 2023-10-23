@@ -213,6 +213,41 @@ jobs:
             pwd
             find /root
 
+  delete_dns_records:
+    docker:
+      - image: dudesm00thie/kubeeks
+    steps:
+      - checkout
+      - run:
+          name: Login to AWS
+          command: |
+            aws configure set aws_access_key_id "${AWS_ACCESS_KEY}"
+            aws configure set aws_secret_access_key "${AWS_SECRET_KEY}"
+            aws configure set default.region us-east-1
+            aws configure set default.output json
+      - run:
+          name: Delete DNS Records
+          command: |
+            # Replace YOUR_ZONE_ID with the actual Route 53 hosted zone ID
+            YOUR_ZONE_ID="Z04657543MVVFNU39NC7S"
+            aws route53 change-resource-record-sets --hosted-zone-id $YOUR_ZONE_ID --change-batch '{
+              "Changes": [
+                {
+                  "Action": "DELETE",
+                  "ResourceRecordSet": {
+                    "Name": "frontend.prod.wadestern.com.",
+                    "Type": "A"
+                  }
+                },
+                {
+                  "Action": "DELETE",
+                  "ResourceRecordSet": {
+                    "Name": "backend.prod.wadestern.com.",
+                    "Type": "A"
+                  }
+                }
+              ]
+            }'
   Create_and_deploy_prod:
     docker:
       - image: dudesm00thie/kubeeks
@@ -333,6 +368,7 @@ workflows:
       - create_kubernetes_cluster:
           requires:
             - build_docker_image
+      - delete_dns_records
 #      - setup_dns_and_deploy:
 #          requires:
 #            - create_kubernetes_cluster
