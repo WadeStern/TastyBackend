@@ -74,9 +74,9 @@ jobs:
             dns_zone="staging.wadestern.com"
             record_cname="projects.wadestern.com.s3-website-us-east-1.amazonaws.com"
 
-            az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "frontend" --cname "$record_cname"
+            az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "frontend" --cname "frontend" --cname "$record_cname"
 
-            az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "@" --cname "backend" --cname "$record_cname"
+            az network dns record-set cname set-record --zone-name "$dns_zone" --resource-group "buypotatoResourceGroup" --record-set-name "backend" --cname "backend" --cname "$record_cname"
       - run:
           name: Create Kubernetes Cluster
           command: |
